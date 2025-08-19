@@ -1,0 +1,100 @@
+<!doctype html>
+<html lang="de">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Password Generator – Tailwind + JS</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <meta name="color-scheme" content="dark light" />
+  <style>
+    :root { color-scheme: dark; }
+  </style>
+</head>
+<body class="min-h-screen bg-gradient-to-br from-slate-900 via-slate-950 to-black text-slate-100 antialiased">
+  <div class="max-w-4xl mx-auto px-4 py-10">
+    <header class="mb-8">
+      <h1 class="text-3xl md:text-4xl font-extrabold tracking-tight">🔐 Password Generator</h1>
+      <p class="text-slate-400 mt-2">Generier dir bis zu 12 frische Passwörter – schnell, lokal & ohne Cloud.</p>
+    </header>
+
+    <section class="grid lg:grid-cols-3 gap-6">
+      <div class="lg:col-span-1">
+        <div class="bg-slate-800/60 border border-slate-700 rounded-2xl p-5 shadow-xl backdrop-blur">
+          <h2 class="font-semibold text-lg mb-4">Einstellungen</h2>
+          <label class="block text-sm text-slate-300 mb-2" for="length">Länge: <span id="lengthVal" class="font-bold">16</span></label>
+          <input id="length" type="range" min="4" max="128" value="16" class="w-full accent-indigo-500">
+          <div class="mt-5">
+            <label class="block text-sm text-slate-300 mb-2" for="count">Anzahl (1–12): <span id="countVal" class="font-bold">4</span></label>
+            <input id="count" type="range" min="1" max="12" value="4" class="w-full accent-indigo-500">
+          </div>
+          <fieldset class="mt-6 space-y-3">
+            <legend class="text-sm text-slate-300 mb-1">Zeichenarten</legend>
+            <label class="flex items-center gap-3 cursor-pointer select-none">
+              <input id="lower" type="checkbox" class="accent-indigo-500 w-4 h-4" checked>
+              <span>Kleinbuchstaben (a–z)</span>
+            </label>
+            <label class="flex items-center gap-3 cursor-pointer select-none">
+              <input id="upper" type="checkbox" class="accent-indigo-500 w-4 h-4" checked>
+              <span>Großbuchstaben (A–Z)</span>
+            </label>
+            <label class="flex items-center gap-3 cursor-pointer select-none">
+              <input id="digits" type="checkbox" class="accent-indigo-500 w-4 h-4" checked>
+              <span>Zahlen (0–9)</span>
+            </label>
+            <label class="flex items-center gap-3 cursor-pointer select-none">
+              <input id="symbols" type="checkbox" class="accent-indigo-500 w-4 h-4">
+              <span>Sonderzeichen (!@#$…)</span>
+            </label>
+          </fieldset>
+          <details class="mt-6">
+            <summary class="cursor-pointer text-sm text-slate-300/90 hover:text-slate-200">Weitere Optionen</summary>
+            <div class="mt-3 space-y-3">
+              <label class="flex items-center gap-3 cursor-pointer select-none">
+                <input id="noAmbiguous" type="checkbox" class="accent-indigo-500 w-4 h-4" />
+                <span>Mehr Lesbarkeit (ohne 0/O, 1/l/I)</span>
+              </label>
+              <label class="flex items-center gap-3 cursor-pointer select-none">
+                <input id="ensureAllSets" type="checkbox" class="accent-indigo-500 w-4 h-4" checked />
+                <span>Mind. ein Zeichen pro ausgewähltem Typ</span>
+              </label>
+            </div>
+          </details>
+          <div class="mt-6 flex flex-col sm:flex-row gap-3">
+            <button id="generateBtn" class="flex-1 inline-flex items-center justify-center rounded-xl bg-indigo-600 hover:bg-indigo-500 active:bg-indigo-700 px-4 py-2.5 font-semibold shadow-lg shadow-indigo-950/30 transition disabled:opacity-60 disabled:cursor-not-allowed">Generieren</button>
+            <button id="copyAllBtn" class="inline-flex items-center justify-center rounded-xl bg-slate-700 hover:bg-slate-600 active:bg-slate-800 px-4 py-2.5 font-semibold transition disabled:opacity-60 disabled:cursor-not-allowed">Alle kopieren</button>
+          </div>
+          <p id="status" class="text-sm text-slate-400 mt-3 h-5"></p>
+        </div>
+      </div>
+
+      <div class="lg:col-span-2">
+        <div class="bg-slate-800/60 border border-slate-700 rounded-2xl p-5 shadow-xl backdrop-blur">
+          <div class="flex items-center justify-between gap-3 mb-4">
+            <h2 class="font-semibold text-lg">Ergebnis</h2>
+            <span id="strengthHint" class="text-xs text-slate-400">—</span>
+          </div>
+          <div id="grid" class="grid md:grid-cols-2 gap-3"></div>
+          <div id="emptyState" class="text-center py-10 text-slate-400">
+            <p>Noch nix da. Klick auf <span class="font-semibold">Generieren</span> und gönn dir 🔥</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <footer class="text-xs text-slate-500 mt-10 text-center">
+      <p>Alles lokal im Browser generiert mit <code>crypto.getRandomValues</code>. Keine Daten werden gesendet. Stay safe 🫶</p>
+    </footer>
+  </div>
+
+  <template id="pwCardTpl">
+    <div class="group border border-slate-700 rounded-xl p-3 bg-slate-900/40 hover:bg-slate-900/70 transition shadow-sm hover:shadow-md">
+      <div class="flex items-center gap-2">
+        <code class="pw font-mono text-slate-100 text-sm break-all flex-1 select-all">password</code>
+        <button class="copy rounded-lg bg-slate-700 hover:bg-slate-600 active:bg-slate-800 px-3 py-1.5 text-xs font-semibold">Copy</button>
+      </div>
+    </div>
+  </template>
+
+  <script src="script.js"></script>
+</body>
+</html>
